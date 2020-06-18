@@ -1,0 +1,31 @@
+package cn.how2j.trend.util;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
+/**
+ * 工具：用于spring中的服务组件的重新加载
+ *
+ * @author qqlin
+ * @date 2020-6-13 15:46
+ */
+@Component
+public class SpringContextUtil implements ApplicationContextAware {
+
+    private SpringContextUtil() {
+        System.out.println("SpringContextUtil()");
+    }
+
+    private static ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        System.out.println("applicationContext:" + applicationContext);
+        SpringContextUtil.applicationContext = applicationContext;
+    }
+
+    public static <T> T getBean(Class<T> clazz) {
+        return applicationContext.getBean(clazz);
+    }
+}
