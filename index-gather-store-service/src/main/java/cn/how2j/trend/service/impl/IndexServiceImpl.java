@@ -5,7 +5,7 @@ import cn.how2j.trend.service.IndexService;
 import cn.how2j.trend.util.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -30,7 +30,7 @@ public class IndexServiceImpl implements IndexService {
     private RestTemplate restTemplate;
 
     @Override
-    @HystrixCommand(fallbackMethod = "thirdPartNotConnected")
+    @CircuitBreaker(name = "default", fallbackMethod = "thirdPartNotConnected")
     public List<Index> fresh() {
         indexes = fetchIndexesFromThirdPart();
         IndexService indexService = SpringContextUtil.getBean(IndexService.class);
@@ -65,8 +65,8 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
-    public List<Index> thirdPartNotConnected() {
-        System.out.println("thirdPartNotConnected()");
+    public List<Index> thirdPartNotConnected(Throwable t) {
+        System.out.println("thirdPartNotConnected(), cause: " + t.getMessage());
         Index index = new Index();
         index.setCode("000000");
         index.setName("无效指数代码");

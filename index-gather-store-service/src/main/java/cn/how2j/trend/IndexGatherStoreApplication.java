@@ -1,14 +1,13 @@
 package cn.how2j.trend;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,8 +16,7 @@ import org.springframework.web.client.RestTemplate;
  * @date 2020-6-13 11:08
  */
 @SpringBootApplication
-@EnableEurekaClient
-@EnableHystrix
+@EnableDiscoveryClient
 @EnableCaching
 public class IndexGatherStoreApplication {
 

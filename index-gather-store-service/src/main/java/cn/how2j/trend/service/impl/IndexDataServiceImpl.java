@@ -6,7 +6,7 @@ import cn.how2j.trend.util.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,7 +33,7 @@ public class IndexDataServiceImpl implements IndexDataService {
     private RestTemplate restTemplate;
 
     @Override
-    @HystrixCommand(fallbackMethod = "thirdPartNotConnected")
+    @CircuitBreaker(name = "default", fallbackMethod = "thirdPartNotConnected")
     public List<IndexData> fresh(String code) {
         List<IndexData> indexDataList = fetchIndexesFromThirdPart(code);
 
@@ -75,8 +75,8 @@ public class IndexDataServiceImpl implements IndexDataService {
     }
 
     @Override
-    public List<IndexData> thirdPartNotConnected(String code) {
-        System.out.println("thirdPartNotConnected()");
+    public List<IndexData> thirdPartNotConnected(String code, Throwable t) {
+        System.out.println("thirdPartNotConnected(), cause: " + t.getMessage());
         IndexData indexData = new IndexData();
         indexData.setClosePoint(0);
         indexData.setDate("n/a");

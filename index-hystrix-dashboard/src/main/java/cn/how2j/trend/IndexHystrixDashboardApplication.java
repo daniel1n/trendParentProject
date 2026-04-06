@@ -1,6 +1,6 @@
 package cn.how2j.trend;
 
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;

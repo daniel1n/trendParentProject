@@ -61,9 +61,10 @@ public interface IndexDataService {
      * 就自动调用 third_part_not_connected 并返回
      *
      * @param code 证券代码
+     * @param t 异常信息
      * @return 断路器的数据
      */
-    List<IndexData> thirdPartNotConnected(String code);
+    List<IndexData> thirdPartNotConnected(String code, Throwable t);
 
     /**
      * 从第三方获取出来的内容是Map类型

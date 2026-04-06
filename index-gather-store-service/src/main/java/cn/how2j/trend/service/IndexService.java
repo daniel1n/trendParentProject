@@ -54,9 +54,10 @@ public interface IndexService {
      * 如果fetch_indexes_from_third_part获取失败了，
      * 就自动调用 third_part_not_connected 并返回
      *
+     * @param t 异常信息
      * @return 断路器的数据
      */
-    List<Index> thirdPartNotConnected();
+    List<Index> thirdPartNotConnected(Throwable t);
 
     /**
      * 从第三方获取出来的内容是Map类型

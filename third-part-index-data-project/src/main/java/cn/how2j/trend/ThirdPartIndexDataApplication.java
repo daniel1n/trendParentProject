@@ -1,19 +1,19 @@
 package cn.how2j.trend;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @author qqlin
  * @date 2020-6-13 10:31
  */
 @SpringBootApplication
-@EnableEurekaClient
+@EnableDiscoveryClient
 public class ThirdPartIndexDataApplication {
 
     public static void main(String[] args) {
