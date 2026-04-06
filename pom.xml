@@ -38,6 +38,8 @@
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <hutool.version>5.8.22</hutool.version>
+        <!-- 修复安全漏洞：Jackson 2.13.x 有已知 CVE -->
+        <jackson.version>2.15.3</jackson.version>
     </properties>
 
     <dependencies>
@@ -97,6 +99,22 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-sleuth-zipkin</artifactId>
                 <version>3.1.9</version>
+            </dependency>
+            <!-- 修复 Jackson CVE -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
