@@ -8,7 +8,6 @@ import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Bean;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -27,22 +26,10 @@ public class TrendTradingBackTestViewApplication {
     public static void main(String[] args) {
         int port = 0;
         int defaultPort = 8041;
-        int eurekaServerPort = 8761;
-        int configServerPort = 8060;
-        int rabbitMqPort = 5672;
+        int nacosPort = 8848;
 
-        if (NetUtil.isUsableLocalPort(eurekaServerPort)) {
-            System.err.printf("检查到端口%d 未启用，判断 eureka 服务器没有启动，本服务无法使用，故退出%n", eurekaServerPort);
-            System.exit(1);
-        }
-
-        if (NetUtil.isUsableLocalPort(configServerPort)) {
-            System.err.printf("检查到端口%d 未启用，判断 配置服务器没有启动， 本服务无法使用，故退出%n", configServerPort);
-            System.exit(1);
-        }
-
-        if (NetUtil.isUsableLocalPort(rabbitMqPort)) {
-            System.err.printf("检查到端口%d 未启用，判断 rabbitMQ 服务器没有启动， 本服务无法使用，故退出%n", rabbitMqPort);
+        if (NetUtil.isUsableLocalPort(nacosPort)) {
+            System.err.printf("检查到端口%d 未启用，判断 Nacos 服务器没有启动，本服务无法使用，故退出%n", nacosPort);
             System.exit(1);
         }
 
