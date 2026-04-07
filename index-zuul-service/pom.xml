@@ -12,11 +12,6 @@
     <artifactId>index-zuul-service</artifactId>
 
     <dependencies>
-        <!-- eureka-client -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
         <!-- springboot web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -33,10 +28,19 @@
             <artifactId>spring-cloud-sleuth-zipkin</artifactId>
         </dependency>
 
-        <!-- Spring Cloud Alibaba Nacos Discovery -->
+        <!-- Spring Cloud Alibaba Nacos (Discovery + Config) -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <!-- Spring Boot Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 

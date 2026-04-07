@@ -17,16 +17,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- eureka-client -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <!-- feign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
 
         <!-- 断路器 (Resilience4j) -->
         <dependency>
@@ -49,16 +39,25 @@
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
         </dependency>
-        <!-- Spring Cloud Alibaba Nacos Discovery -->
+        <!-- Spring Cloud Alibaba Nacos (Discovery + Config) -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
         <!-- Trend API (Dubbo interfaces) -->
         <dependency>
             <groupId>cn.how2j.trend</groupId>
             <artifactId>trend-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- Dubbo Actuator -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-actuator</artifactId>
         </dependency>
     </dependencies>
 </project>
