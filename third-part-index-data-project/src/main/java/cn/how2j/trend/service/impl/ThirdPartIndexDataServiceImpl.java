@@ -16,7 +16,7 @@ import java.util.List;
  * @author qqlin
  */
 @Service
-@DubboService(version = "1.0.0", timeout = 30000)
+@DubboService(version = "1.0.0", group = "third-part-index-data-group", timeout = 30000)
 public class ThirdPartIndexDataServiceImpl implements ThirdPartIndexDataDubboService {
 
     @Override

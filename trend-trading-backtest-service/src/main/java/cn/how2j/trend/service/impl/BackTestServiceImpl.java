@@ -24,7 +24,7 @@ import java.util.*;
 @Service
 public class BackTestServiceImpl implements BackTestService {
 
-    @DubboReference(version = "1.0.0", timeout = 30000)
+    @DubboReference(version = "1.0.0", group = "index-data-group", timeout = 30000)
     private IndexDataDubboService indexDataDubboService;
 
     @Override

@@ -27,7 +27,7 @@ public class IndexServiceImpl implements IndexService {
 
     private List<Index> indexes;
 
-    @DubboReference(version = "1.0.0", timeout = 30000)
+    @DubboReference(version = "1.0.0", group = "third-part-index-data-group", timeout = 30000)
     private ThirdPartIndexDataDubboService thirdPartIndexDataDubboService;
 
     @Override

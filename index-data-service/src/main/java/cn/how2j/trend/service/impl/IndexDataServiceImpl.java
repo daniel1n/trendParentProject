@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2020-6-14 0:01
  */
 @Service
-@DubboService(version = "1.0.0", timeout = 30000)
+@DubboService(version = "1.0.0", group = "index-data-group", timeout = 30000)
 @CacheConfig(cacheNames = "index_datas")
 public class IndexDataServiceImpl implements IndexDataService {
 

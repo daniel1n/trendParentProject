@@ -12,11 +12,29 @@ spring:
 dubbo:
   application:
     name: ${spring.application.name}
+    qos-enable: false
   protocol:
     name: tri
     port: 20885
+    threads: 200
+    queues: 0
+    iothreads: 4
   registry:
     address: nacos://localhost:8848
+    group: DUBBO_DEFAULT_GROUP
+  provider:
+    timeout: 30000
+    retries: 0
+    delay: -1
+    loadbalance: roundrobin
+  consumer:
+    timeout: 30000
+    retries: 0
+    check: false
+    loadbalance: roundrobin
+  metadata-report:
+    address: nacos://localhost:8848
+    group: DUBBO_METADATA
 
 # Resilience4j Circuit Breaker
 resilience4j:
