@@ -36,6 +36,20 @@ dubbo:
     address: nacos://localhost:8848
     group: DUBBO_METADATA
 
+# Management & Observability
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    dubbo:
+      enabled: true
+    dubbo-consumer:
+      enabled: true
+
 # Resilience4j Circuit Breaker
 resilience4j:
   circuitbreaker:
@@ -48,12 +62,3 @@ resilience4j:
     instances:
       default:
         baseConfig: default
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-      cors:
-        allowed-methods: "*"
-        allowed-origins: "*"

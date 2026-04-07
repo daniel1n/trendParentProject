@@ -169,6 +169,18 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Dubbo Spring Boot Actuator -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-actuator</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <!-- Dubbo Metrics SPI -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-metadata-definition-protobuf</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
             <!-- Spring Cloud Alibaba (Nacos) BOM -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>

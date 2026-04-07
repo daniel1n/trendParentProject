@@ -19,3 +19,13 @@ zuul:
     api-c:
       path: /api-view/**
       serviceId: trend-trading-backtest-view
+
+# Management & Observability
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

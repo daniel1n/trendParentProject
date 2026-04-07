@@ -35,3 +35,17 @@ dubbo:
     group: DUBBO_METADATA
   scan:
     base-packages: cn.how2j.trend.service.impl
+
+# Management & Observability
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    dubbo:
+      enabled: true
+    dubbo-provider:
+      enabled: true
