@@ -10,19 +10,32 @@
 
     <!--微服务架构下的子项目-->
     <modules>
-        <!-- Dubbo3 API 模块 (新增) -->
+        <!-- Dubbo3 API 模块 -->
         <module>trend-api</module>
-        <module>eureka-server</module>
+        <!-- 第三方指数数据服务 (Dubbo Provider) -->
         <module>third-part-index-data-project</module>
+        <!-- 数据采集存储服务 (Dubbo Consumer + Provider) -->
         <module>index-gather-store-service</module>
+        <!-- 指数代码服务 (Dubbo Provider) -->
         <module>index-codes-service</module>
+        <!-- 指数数据服务 (Dubbo Provider) -->
         <module>index-data-service</module>
+        <!-- API网关 (Zuul + Nacos) -->
         <module>index-zuul-service</module>
+        <!-- 交易回测服务 (Dubbo Consumer) -->
         <module>trend-trading-backtest-service</module>
+        <!-- 回测视图服务 (Web UI) -->
         <module>trend-trading-backtest-view</module>
-        <module>index-config-server</module>
-        <module>index-hystrix-dashboard</module>
-        <module>index-turbine</module>
+
+        <!-- ========== 已废弃的模块 (Nacos + Dubbo3 迁移后不再需要) ========== -->
+        <!-- Eureka Server - 已废弃，使用 Nacos Server 替代 -->
+        <!-- <module>eureka-server</module> -->
+        <!-- Spring Cloud Config Server - 已废弃，使用 Nacos Config 替代 -->
+        <!-- <module>index-config-server</module> -->
+        <!-- Hystrix Dashboard - 已废弃，使用 Actuator + Micrometer 替代 -->
+        <!-- <module>index-hystrix-dashboard</module> -->
+        <!-- Turbine - 已废弃，使用 Actuator + Micrometer 替代 -->
+        <!-- <module>index-turbine</module> -->
     </modules>
 
     <packaging>pom</packaging>
