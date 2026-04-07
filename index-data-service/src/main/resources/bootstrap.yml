@@ -1,6 +1,6 @@
 spring:
   application:
-    name: trend-trading-backtest-view
+    name: index-data-service
   cloud:
     nacos:
       config:
