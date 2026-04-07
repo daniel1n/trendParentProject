@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A Spring Cloud (Finchley.RELEASE / Spring Boot 2.0.3) microservices project for stock index trend trading and backtesting. Uses Maven multi-module structure with 11 modules.
+A Spring Cloud microservices project for stock index trend trading and backtesting, upgraded to **JDK 17**, **Spring Boot 2.7.18**, **Spring Cloud 2022.0.4**, **Dubbo3**, and **Nacos**. Uses Maven multi-module structure with 8 modules.
 
 ## Build & Test Commands
 
@@ -15,67 +15,106 @@ mvn clean install
 # Build without tests
 mvn clean install -DskipTests
 
-# Run tests for a specific module (from module directory)
+# Run tests for all modules
 mvn test
 
-# Run a single test class
-mvn test -Dtest=AppTest
+# Run tests for a specific module
+mvn test -pl index-codes-service
+
+# Package all modules
+mvn clean package -DskipTests
 ```
 
-## Microservices Architecture
+## Microservices Architecture (Dubbo3 + Nacos)
 
-| Module | Purpose | Port |
-|--------|---------|------|
-| eureka-server | Service registry (Netflix Eureka) | 8761 |
-| index-config-server | Centralized config (Spring Cloud Config, Git-backed) | 8888 |
-| index-zuul-service | API Gateway with routing | 8050 |
-| index-codes-service | Index codes management | 8010 |
-| index-data-service | Index data retrieval | 8011 |
-| index-gather-store-service | Data aggregation, scheduled sync with Quartz, Redis caching | 8012 |
-| third-part-index-data-project | Mock third-party index data provider (static JSON) | 8013 |
-| trend-trading-backtest-service | Trading backtesting with Feign + Hystrix | 8051 |
-| trend-trading-backtest-view | Thymeleaf web UI for visualizations | 8052 |
-| index-hystrix-dashboard | Hystrix circuit breaker monitoring | 8484 |
-| index-turbine | Turbine for aggregating Hystrix metrics | 8989 |
+| Module | Purpose | Port | Dubbo Port |
+|--------|---------|------|------------|
+| trend-api | Dubbo RPC interfaces (API module) | - | - |
+| index-codes-service | Index codes management (Dubbo Provider) | 8010 | 20881 |
+| index-data-service | Index data retrieval (Dubbo Provider) | 8011 | 20882 |
+| third-part-index-data-project | Third-party index data (Dubbo Provider) | 8013 | 20883 |
+| index-gather-store-service | Data aggregation, Quartz sync, Redis cache | 8012 | 20884 |
+| trend-trading-backtest-service | Trading backtesting (Dubbo Consumer) | 8051 | 20885 |
+| trend-trading-backtest-view | Thymeleaf web UI | 8052 | - |
+| index-zuul-service | API Gateway with routing | 8050 | - |
+
+**Deprecated/Removed Modules:**
+- `eureka-server` (replaced by Nacos Server)
+- `index-config-server` (replaced by Nacos Config)
+- `index-hystrix-dashboard` (replaced by Actuator endpoints)
+- `index-turbine` (replaced by Actuator endpoints)
 
 ## Key Technical Components
 
-- **Eureka**: All services register with `http://localhost:8761/eureka/`
-- **Redis**: Used by index-gather-store-service for caching (configured in `RedisCacheConfig`)
-- **Quartz Scheduler**: `IndexDataSyncJob` runs periodic index data synchronization
-- **Feign Clients**: trend-trading-backtest-service uses `@EnableFeignClients` to call other services
-- **Hystrix Circuit Breaker**: Enabled with `@EnableCircuitBreaker`
-- **Zipkin**: Distributed tracing at `http://localhost:9411`
+- **Nacos Server**: Service registry and config center (`localhost:8848`)
+- **Dubbo3 RPC**: Triple protocol for inter-service communication
+- **Redis**: Used for caching (index-gather-store-service)
+- **Quartz Scheduler**: `IndexDataSyncJob` for periodic index data synchronization
+- **Resilience4j**: Circuit breaker pattern (replacing Hystrix)
+- **Zipkin**: Distributed tracing (`localhost:9411`)
+- **Spring Boot Actuator**: Monitoring and health checks
 
-## Service Dependencies
+## Dubbo Service Groups
+
+| Service | Group | Version |
+|---------|-------|---------|
+| index-codes-service | index-codes-group | 1.0.0 |
+| index-data-service | index-data-group | 1.0.0 |
+| third-part-index-data-project | third-part-index-data-group | 1.0.0 |
+
+## Service Dependencies (Dubbo RPC)
 
 ```
-Zuul Gateway (8050) → Routes:
-  /api-codes/* → index-codes-service (8010)
-  /api-backtest/* → trend-trading-backtest-service (8051)
-  /api-view/* → trend-trading-backtest-view (8052)
-
-index-gather-store-service (8012) → Uses Feign to call third-part-index-data-project (8013)
-
-trend-trading-backtest-service (8051) → Feign clients to:
-  - index-codes-service
-  - index-data-service
-  - index-gather-store-service
+trend-trading-backtest-service → Dubbo → index-data-service
+index-gather-store-service → Dubbo → third-part-index-data-project
 ```
+
+## API Gateway Routes (Zuul)
+
+| Path | Service |
+|------|---------|
+| /api-codes/* | index-codes-service |
+| /api-backtest/* | trend-trading-backtest-service |
+| /api-view/* | trend-trading-backtest-view |
 
 ## Startup Order
 
-1. eureka-server (8761)
-2. index-config-server (8888) - optional, if using external config
-3. index-codes-service (8010)
-4. index-data-service (8011)
-5. third-part-index-data-project (8013)
-6. index-gather-store-service (8012)
-7. trend-trading-backtest-service (8051)
-8. trend-trading-backtest-view (8052)
-9. index-zuul-service (8050)
-10. index-hystrix-dashboard (8484) + index-turbine (8989) - for monitoring
+1. **Nacos Server** - `docker run --name nacos -d -p 8848:8848 -p 9848:9848 nacos/nacos-server:v2.2.3`
+2. **Redis** (if not running)
+3. **third-part-index-data-project** (8083) - Dubbo provider
+4. **index-gather-store-service** (8012) - Dubbo consumer + provider
+5. **index-codes-service** (8010) - Dubbo provider
+6. **index-data-service** (8011) - Dubbo provider
+7. **trend-trading-backtest-service** (8051) - Dubbo consumer
+8. **index-zuul-service** (8050) - API Gateway
+9. **trend-trading-backtest-view** (8052) - Web UI
 
 ## Port Configuration
 
-Most services support `port=` command-line argument. The trend-trading-backtest-service prompts for port if not specified, defaulting to 8051 after 5 seconds.
+Most services support `port=` command-line argument. Example:
+```bash
+java -jar index-codes-service.jar --port=8010
+```
+
+## Actuator Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| /actuator/health | Service health status |
+| /actuator/info | Application info |
+| /actuator/metrics | Application metrics |
+| /actuator/dubbo | Dubbo runtime info |
+| /actuator/dubbo-provider | Provider statistics |
+| /actuator/dubbo-consumer | Consumer statistics |
+
+## Nacos Configuration
+
+All services read configuration from Nacos Config Server with:
+- Server: `localhost:8848`
+- Namespace: `public`
+- Group: `DEFAULT_GROUP`
+- File extension: `yaml`
+
+Configuration files in Nacos:
+- `{application-name}.yaml` - Service-specific config
+- `shared-data.yaml` - Shared configuration
