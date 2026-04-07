@@ -1,8 +1,17 @@
 spring:
   application:
     name: index-gather-store-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+# Dubbo Configuration
+dubbo:
+  application:
+    name: ${spring.application.name}
+  protocol:
+    name: tri
+    port: 20884
+  registry:
+    address: nacos://localhost:8848

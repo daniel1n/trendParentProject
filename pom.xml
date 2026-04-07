@@ -10,6 +10,8 @@
 
     <!--微服务架构下的子项目-->
     <modules>
+        <!-- Dubbo3 API 模块 (新增) -->
+        <module>trend-api</module>
         <module>eureka-server</module>
         <module>third-part-index-data-project</module>
         <module>index-gather-store-service</module>
@@ -42,6 +44,10 @@
         <jackson.version>2.15.3</jackson.version>
         <!-- Resilience4j 最新稳定版 -->
         <resilience4j.version>2.2.0</resilience4j.version>
+        <!-- Dubbo3 最新稳定版 -->
+        <dubbo.version>3.2.8</dubbo.version>
+        <!-- Spring Cloud Alibaba (Nacos) -->
+        <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
     </properties>
 
     <dependencies>
@@ -141,6 +147,22 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <!-- Dubbo3 BOM -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud Alibaba (Nacos) BOM -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

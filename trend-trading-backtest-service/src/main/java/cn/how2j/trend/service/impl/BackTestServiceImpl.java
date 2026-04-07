@@ -1,16 +1,18 @@
 package cn.how2j.trend.service.impl;
 
-import cn.how2j.trend.client.IndexDataClient;
+import cn.how2j.trend.dubbo.IndexDataDubboService;
 import cn.how2j.trend.pojo.AnnualProfit;
 import cn.how2j.trend.pojo.IndexData;
 import cn.how2j.trend.pojo.Profit;
 import cn.how2j.trend.pojo.Trade;
 import cn.how2j.trend.service.BackTestService;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,12 +24,16 @@ import java.util.*;
 @Service
 public class BackTestServiceImpl implements BackTestService {
 
-    @Autowired
-    private IndexDataClient indexDataClient;
+    @DubboReference(version = "1.0.0", timeout = 30000)
+    private IndexDataDubboService indexDataDubboService;
 
     @Override
+    @CircuitBreaker(name = "default", fallbackMethod = "indexDataFallback")
     public List<IndexData> indexDataList(String code) {
-        List<IndexData> result = indexDataClient.getIndexData(code);
+        List<IndexData> result = indexDataDubboService.get(code);
+        if (result == null) {
+            result = CollUtil.toList();
+        }
         Collections.reverse(result);
 
 //        for (IndexData indexData : result) {
@@ -35,6 +41,14 @@ public class BackTestServiceImpl implements BackTestService {
 //        }
 
         return result;
+    }
+
+    public List<IndexData> indexDataFallback(String code, Throwable t) {
+        System.out.println("indexDataFallback(), cause: " + t.getMessage());
+        IndexData indexData = new IndexData();
+        indexData.setClosePoint(0);
+        indexData.setDate("0000-00-00");
+        return CollUtil.toList(indexData);
     }
 
     @Override

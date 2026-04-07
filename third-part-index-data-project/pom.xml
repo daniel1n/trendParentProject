@@ -22,5 +22,22 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+
+        <!-- Dubbo3 RPC -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- Spring Cloud Alibaba Nacos Discovery -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- Trend API (Dubbo interfaces) -->
+        <dependency>
+            <groupId>cn.how2j.trend</groupId>
+            <artifactId>trend-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

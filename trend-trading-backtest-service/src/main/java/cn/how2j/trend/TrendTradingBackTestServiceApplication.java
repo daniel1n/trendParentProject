@@ -5,10 +5,10 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableDubbo
 public class TrendTradingBackTestServiceApplication {
 
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package cn.how2j.trend.service;
 
+import cn.how2j.trend.dubbo.IndexCodesDubboService;
 import cn.how2j.trend.pojo.Index;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Map;
  * @author qqlin
  * @date 2020-6-13 10:59
  */
-public interface IndexService {
+public interface IndexService extends IndexCodesDubboService {
 
     /**
      * 刷新数据。 刷新的思路就是：

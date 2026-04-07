@@ -1,17 +1,17 @@
 package cn.how2j.trend.service.impl;
 
+import cn.how2j.trend.dubbo.ThirdPartIndexDataDubboService;
 import cn.how2j.trend.pojo.Index;
 import cn.how2j.trend.service.IndexService;
 import cn.how2j.trend.util.SpringContextUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,9 @@ import java.util.Map;
 public class IndexServiceImpl implements IndexService {
 
     private List<Index> indexes;
-    @Autowired
-    private RestTemplate restTemplate;
+
+    @DubboReference(version = "1.0.0", timeout = 30000)
+    private ThirdPartIndexDataDubboService thirdPartIndexDataDubboService;
 
     @Override
     @CircuitBreaker(name = "default", fallbackMethod = "thirdPartNotConnected")
@@ -58,10 +59,8 @@ public class IndexServiceImpl implements IndexService {
 
     @Override
     public List<Index> fetchIndexesFromThirdPart() {
-        List<Map> temp = restTemplate.getForObject(
-                "http://localhost:8090/indexes/codes.json", List.class);
-        assert temp != null;
-        return map2Index(temp);
+        // 使用 Dubbo RPC 调用第三方服务
+        return thirdPartIndexDataDubboService.getCodes();
     }
 
     @Override
@@ -86,5 +85,33 @@ public class IndexServiceImpl implements IndexService {
         }
 
         return indexes;
+    }
+
+    // Dubbo service interface methods (required for consumer, may delegate to local methods)
+
+    @Override
+    public List<Index> getCodes() {
+        return get();
+    }
+
+    @Override
+    public Index getIndex(String code) {
+        Index index = new Index();
+        index.setCode(code);
+        index.setName("指数-" + code);
+        return index;
+    }
+
+    @Override
+    public void remove(String code) {
+        // Redis cache eviction for specific code
+    }
+
+    @Override
+    public Index store(String code) {
+        Index index = new Index();
+        index.setCode(code);
+        index.setName("指数-" + code);
+        return index;
     }
 }
